@@ -52,6 +52,14 @@ def tweet():
         tweet_content = '\n'.join(text)
         api.update_status(tweet_content)
 
+def follow_back():
+    flist = api.followers(count=5)
+    for f in flist:
+        if 'ネットビジネス' | '副業' | '万' in f:
+            continue
+        else:
+            api.create_friendship(f.id)
+
 def logout():
         driver_action = ActionChains(driver)
         account_menu = driver.find_element_by_xpath(XPATH_ACCOUNT)
@@ -91,6 +99,7 @@ if __name__ == '__main__':
 
     login()
     tweet()
+    follow_back()
     logout()
 
     driver.quit()
