@@ -41,6 +41,11 @@ def tweet():
         affiliate_button = driver.find_element_by_class_name('guide_list')
         affiliate_button.click()
 
+        if driver.current_url == HOME_URL:
+            driver.back()
+            affiliate_button = driver.find_element_by_class_name('guide_list')
+            affiliate_button.click()
+
         copy_ref = driver.find_element_by_xpath(XPATH_COPY)
         affiliate_link = copy_ref.get_attribute('href')
         
@@ -73,6 +78,7 @@ if __name__ == '__main__':
     load_dotenv()
     MAIL_ADDRESS = os.environ['MAIL_ADDRESS']
     PASSWORD = os.environ['PASSWORD']
+    HOME_URL = os.environ['HOME_URL']
     LOGIN_URL = os.environ['LOGIN_URL']
     RANKING_URL = os.environ['RANKING_URL']
     XPATH_3RD = os.environ['XPATH_3RD']
