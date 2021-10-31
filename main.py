@@ -7,6 +7,42 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 import tweepy
 
+
+load_dotenv()
+MAIL_ADDRESS = os.environ['MAIL_ADDRESS']
+PASSWORD = os.environ['PASSWORD']
+HOME_URL = os.environ['HOME_URL']
+LOGIN_URL = os.environ['LOGIN_URL']
+RANKING_URL = os.environ['RANKING_URL']
+XPATH_3RD = os.environ['XPATH_3RD']
+XPATH_2ND = os.environ['XPATH_2ND']
+XPATH_1ST = os.environ['XPATH_1ST']
+XPATH_COPY = os.environ['XPATH_COPY']
+XPATH_ACCOUNT = os.environ['XPATH_ACCOUNT']
+XPATH_LOGOUT = os.environ['XPATH_LOGOUT']
+MSGK_WORDS_3RD = os.environ['MSGK_WORDS_3RD']
+MSGK_WORDS_2ND = os.environ['MSGK_WORDS_2ND']
+MSGK_WORDS_1ST = os.environ['MSGK_WORDS_1ST']
+CONSUMER_KEY = os.environ['CONSUMER_KEY']
+CONSUMER_SECRET = os.environ['CONSUMER_SECRET']
+ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
+ACCESS_TOKEN_SECRET = os.environ['ACCESS_TOKEN_SECRET']
+
+path = '/usr/bin/chromedriver'
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+driver = webdriver.Chrome(executable_path=path, options=options)
+
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
+api = tweepy.API(auth)
+
+def main():
+    login()
+    tweet()
+    logout()
+    driver.quit()
+    
 def login():
         driver.get(LOGIN_URL)
 
@@ -58,14 +94,6 @@ def tweet():
         tweet_content = '\n'.join(text)
         api.update_status(tweet_content)
 
-def follow_back():
-    flist = api.followers(count=5)
-    for f in flist:
-        if 'ネットビジネス' | '副業' | '万' in f:
-            continue
-        else:
-            api.create_friendship(f.id)
-
 def logout():
         driver_action = ActionChains(driver)
         account_menu = driver.find_element_by_xpath(XPATH_ACCOUNT)
@@ -74,39 +102,4 @@ def logout():
         logout_button.click()
 
 if __name__ == '__main__':
-
-    load_dotenv()
-    MAIL_ADDRESS = os.environ['MAIL_ADDRESS']
-    PASSWORD = os.environ['PASSWORD']
-    HOME_URL = os.environ['HOME_URL']
-    LOGIN_URL = os.environ['LOGIN_URL']
-    RANKING_URL = os.environ['RANKING_URL']
-    XPATH_3RD = os.environ['XPATH_3RD']
-    XPATH_2ND = os.environ['XPATH_2ND']
-    XPATH_1ST = os.environ['XPATH_1ST']
-    XPATH_COPY = os.environ['XPATH_COPY']
-    XPATH_ACCOUNT = os.environ['XPATH_ACCOUNT']
-    XPATH_LOGOUT = os.environ['XPATH_LOGOUT']
-    MSGK_WORDS_3RD = os.environ['MSGK_WORDS_3RD']
-    MSGK_WORDS_2ND = os.environ['MSGK_WORDS_2ND']
-    MSGK_WORDS_1ST = os.environ['MSGK_WORDS_1ST']
-    CONSUMER_KEY = os.environ['CONSUMER_KEY']
-    CONSUMER_SECRET = os.environ['CONSUMER_SECRET']
-    ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
-    ACCESS_TOKEN_SECRET = os.environ['ACCESS_TOKEN_SECRET']
-
-    path = '/usr/bin/chromedriver'
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    driver = webdriver.Chrome(executable_path=path, options=options)
-
-    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-    auth.set_access_token(ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
-    api = tweepy.API(auth)
-
-    login()
-    tweet()
-    follow_back()
-    logout()
-
-    driver.quit()
+    main()
