@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from dotenv import load_dotenv
@@ -86,11 +87,12 @@ def tweet():
         affiliate_link = copy_ref.get_attribute('href')
         
         if i == 0:
-            text = [MSGK_WORDS_3RD, affiliate_link]
+            stamp = datetime.datetime.now()
+            text = [MSGK_WORDS_3RD, stamp.strftime('[%Y/%m/%d %H:%M:%S]'), affiliate_link]
         elif i == 1:
-            text = [MSGK_WORDS_2ND, affiliate_link]
+            text = [MSGK_WORDS_2ND, stamp.strftime('[%Y/%m/%d %H:%M:%S]'), affiliate_link]
         elif i == 2:
-            text = [MSGK_WORDS_1ST, affiliate_link]
+            text = [MSGK_WORDS_1ST, stamp.strftime('[%Y/%m/%d %H:%M:%S]'), affiliate_link]
         tweet_content = '\n'.join(text)
         api.update_status(tweet_content)
 
