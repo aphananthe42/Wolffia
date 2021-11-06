@@ -1,5 +1,6 @@
 import datetime
 import os
+import time
 
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -24,6 +25,7 @@ XPATH_LOGOUT = os.environ['XPATH_LOGOUT']
 MSGK_WORDS_3RD = os.environ['MSGK_WORDS_3RD']
 MSGK_WORDS_2ND = os.environ['MSGK_WORDS_2ND']
 MSGK_WORDS_1ST = os.environ['MSGK_WORDS_1ST']
+SEARCH_WORD = os.environ['SEARCH_WORD']
 CONSUMER_KEY = os.environ['CONSUMER_KEY']
 CONSUMER_SECRET = os.environ['CONSUMER_SECRET']
 ACCESS_TOKEN_KEY = os.environ['ACCESS_TOKEN_KEY']
@@ -42,7 +44,7 @@ def main():
     login()
     tweet()
     logout()
-    driver.quit()
+    follow()
     
 def login():
         driver.get(LOGIN_URL)
@@ -102,6 +104,23 @@ def logout():
         driver_action.move_to_element(account_menu).perform()
         logout_button = driver.find_element_by_xpath(XPATH_LOGOUT)
         logout_button.click()
+        driver.quit()
+
+def follow():
+    query = SEARCH_WORD
+    results = api.search_tweets(q=query, count=5)
+    for result in results:
+        screen_name = result.user.screen_name
+        for _ in range(3):
+            try:
+                api.create_friendship(screen_name=screen_name)
+            except tweepy.TooManyRequests:
+                time.sleep(15 * 60)
+            except tweepy.TweepyException:
+                break
+            else:
+                time.sleep(5)
+                break
 
 if __name__ == '__main__':
     main()
