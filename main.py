@@ -1,6 +1,5 @@
 import datetime
 import random
-import sys
 import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -47,7 +46,6 @@ auth.set_access_token(ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 def main():
-    sys.dont_write_bytecode = True
     login()
     tweet()
     logout()
