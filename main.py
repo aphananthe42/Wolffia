@@ -50,6 +50,7 @@ def main():
     tweet()
     logout()
     follow()
+    print('finished successfully.')
     
 def login():
         driver.get(LOGIN_URL)
