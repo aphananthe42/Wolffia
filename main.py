@@ -17,9 +17,9 @@ PASSWORD = settings.PASSWORD
 HOME_URL = settings.HOME_URL
 LOGIN_URL = settings.LOGIN_URL
 DISCOUNT_URL = settings.DISCOUNT_URL
+XPATH_DISCOUNT_RATIO = settings.XPATH_DISCOUNT_RATIO
 XPATH_AFTER_DISCOUNT_PRICE = settings.XPATH_AFTER_DISCOUNT_PRICE
 XPATH_BEFORE_DISCOUNT_PRICE = settings.XPATH_BEFORE_DISCOUNT_PRICE
-XPATH_DISCOUNT_RATIO = settings.XPATH_DISCOUNT_RATIO
 XPATH_TAG_1 = settings.XPATH_TAG_1
 XPATH_TAG_2 = settings.XPATH_TAG_2
 XPATH_TAG_3 = settings.XPATH_TAG_3
@@ -84,9 +84,9 @@ def tweet():
         affiliate_button = driver.find_element(By.CLASS_NAME, 'guide_list')
         affiliate_button.click()
 
+    discount_ratio = driver.find_element(By.XPATH, XPATH_DISCOUNT_RATIO).text
     before_discount_price = driver.find_element(By.XPATH, XPATH_BEFORE_DISCOUNT_PRICE).text
     after_discount_price = driver.find_element(By.XPATH, XPATH_AFTER_DISCOUNT_PRICE).text
-    discount_ratio = driver.find_element(By.XPATH, XPATH_DISCOUNT_RATIO).text
     tag1 = driver.find_element(By.XPATH, XPATH_TAG_1).text
     tag2 = driver.find_element(By.XPATH, XPATH_TAG_2).text
     tag3 = driver.find_element(By.XPATH, XPATH_TAG_3).text
@@ -96,9 +96,11 @@ def tweet():
     stamp = datetime.datetime.now()
 
     text = [
-        TWEET_HEADER, 
-        before_discount_price + ' ' + '➔' + ' ' + after_discount_price + ' ' + '【' + discount_ratio + '】',
-        ' #' + tag1 + ' #' + tag2 + ' #' + tag3 + ' #' + tag4 + ' #' + tag5,
+        TWEET_HEADER,
+        '【' + discount_ratio + '】',
+        before_discount_price + ' ' + '➔➔➔' + ' ' + after_discount_price,
+        ' #' + tag1 + ' #' + tag2 + ' #' + tag3,
+        ' #' + tag4 + ' #' + tag5,
         stamp.strftime('[%Y/%m/%d %H:%M:%S]'),
         affiliate_link
     ]
