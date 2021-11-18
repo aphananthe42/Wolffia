@@ -118,7 +118,7 @@ def logout():
 
 def follow():
     query = SEARCH_WORD
-    results = api.search_tweets(q=query, count=5)
+    results = api.search_tweets(q=query, count=3)
     for result in results:
         screen_name = result.user.screen_name
         for _ in range(3):
