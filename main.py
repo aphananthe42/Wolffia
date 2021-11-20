@@ -45,12 +45,23 @@ auth.set_access_token(ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 def main():
+    follow()
     login()
     tweet()
     logout()
-    follow()
     print('finished successfully.')
+    print('----------------------')
     
+def follow():
+    query = SEARCH_WORD
+    results = api.search_tweets(q=query, count=3)
+    for result in results:
+        screen_name = result.user.screen_name
+        try:
+            api.create_friendship(screen_name=screen_name)
+        except Exception as e:
+            print(e)
+
 def login():
         driver.get(LOGIN_URL)
 
@@ -114,16 +125,6 @@ def logout():
         logout_button = driver.find_element(By.XPATH, XPATH_LOGOUT)
         logout_button.click()
         driver.quit()
-
-def follow():
-    query = SEARCH_WORD
-    results = api.search_tweets(q=query, count=3)
-    for result in results:
-        screen_name = result.user.screen_name
-        try:
-            api.create_friendship(screen_name=screen_name)
-        except Exception as e:
-            print(e)
 
 if __name__ == '__main__':
     main()
