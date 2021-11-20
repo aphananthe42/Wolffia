@@ -1,6 +1,5 @@
 import datetime
 import random
-import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
@@ -118,19 +117,13 @@ def logout():
 
 def follow():
     query = SEARCH_WORD
-    results = api.search_tweets(q=query, count=2)
+    results = api.search_tweets(q=query, count=3)
     for result in results:
         screen_name = result.user.screen_name
-        for _ in range(3):
-            try:
-                api.create_friendship(screen_name=screen_name)
-            except tweepy.TooManyRequests:
-                time.sleep(15 * 60)
-            except tweepy.TweepyException:
-                break
-            else:
-                time.sleep(5)
-                break
+        try:
+            api.create_friendship(screen_name=screen_name)
+        except Exception as e:
+            print(e)
 
 if __name__ == '__main__':
     main()
