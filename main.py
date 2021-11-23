@@ -1,5 +1,6 @@
 import datetime
 import random
+import time
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
@@ -94,6 +95,9 @@ def tweet():
         driver.back()
         affiliate_button = driver.find_element(By.CLASS_NAME, 'guide_list')
         affiliate_button.click()
+
+    # ページ遷移後に要素が特定できないことがあるので3秒待機.
+    time.sleep(3)
 
     discount_ratio = driver.find_element(By.XPATH, XPATH_DISCOUNT_RATIO).text
     before_discount_price = driver.find_element(By.XPATH, XPATH_BEFORE_DISCOUNT_PRICE).text
