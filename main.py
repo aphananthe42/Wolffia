@@ -16,7 +16,6 @@ PASSWORD = settings.PASSWORD
 HOME_URL = settings.HOME_URL
 LOGIN_URL = settings.LOGIN_URL
 DISCOUNT_URL = settings.DISCOUNT_URL
-XPATH_DISCOUNT_RATIO = settings.XPATH_DISCOUNT_RATIO
 XPATH_AFTER_DISCOUNT_PRICE = settings.XPATH_AFTER_DISCOUNT_PRICE
 XPATH_BEFORE_DISCOUNT_PRICE = settings.XPATH_BEFORE_DISCOUNT_PRICE
 XPATH_AFFILIATE_LINK = settings.XPATH_AFFILIATE_LINK
@@ -92,7 +91,7 @@ def tweet():
         affiliate_button = driver.find_element(By.CLASS_NAME, 'guide_list')
         affiliate_button.click()
 
-    discount_ratio = driver.find_element(By.XPATH, XPATH_DISCOUNT_RATIO).text
+    discount_ratio = driver.find_element(By.CLASS_NAME, 'icon_campaign').text
     before_discount_price = driver.find_element(By.XPATH, XPATH_BEFORE_DISCOUNT_PRICE).text
     after_discount_price = driver.find_element(By.XPATH, XPATH_AFTER_DISCOUNT_PRICE).text
     search_tag = driver.find_element(By.CLASS_NAME, 'search_tag')
