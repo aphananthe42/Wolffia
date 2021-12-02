@@ -37,7 +37,9 @@ ACCESS_TOKEN_SECRET = settings.ACCESS_TOKEN_SECRET
 path = '/usr/bin/chromedriver'
 service = Service(executable_path=path)
 options = Options()
-options.headless = True
+options.add_argument('--headless')
+options.add_argument('--no-sandbox')
+options.add_argument('--disable-setuid-sandbox')
 driver = WebDriver(options=options, service=service)
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
