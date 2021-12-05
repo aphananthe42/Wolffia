@@ -33,7 +33,7 @@ service = Service(executable_path=path)
 options = Options()
 options.add_argument('--headless')
 options.add_argument('--no-sandbox')
-options.add_argument('--disable-setuid-sandbox')
+options.add_argument('--disable-gpu')
 driver = WebDriver(options=options, service=service)
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
