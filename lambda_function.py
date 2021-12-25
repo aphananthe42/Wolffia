@@ -1,8 +1,8 @@
 import datetime
 import random
 
+import requests
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -16,6 +16,7 @@ PASSWORD = settings.PASSWORD
 HOME_URL = settings.HOME_URL
 LOGIN_URL = settings.LOGIN_URL
 DISCOUNT_URL = settings.DISCOUNT_URL
+GUIDE_URL = settings.GUIDE_URL
 XPATH_AFTER_DISCOUNT_PRICE = settings.XPATH_AFTER_DISCOUNT_PRICE
 XPATH_BEFORE_DISCOUNT_PRICE = settings.XPATH_BEFORE_DISCOUNT_PRICE
 XPATH_AFFILIATE_LINK = settings.XPATH_AFFILIATE_LINK
@@ -27,10 +28,12 @@ CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 ACCESS_TOKEN_KEY = settings.ACCESS_TOKEN_KEY
 ACCESS_TOKEN_SECRET = settings.ACCESS_TOKEN_SECRET
+LINE_NOTIFY_API_URL = settings.LINE_NOTIFY_API_URL
+LINE_NOTIFY_TOKEN = settings.LINE_NOTIFY_TOKEN
 
-path = '/usr/bin/chromedriver'
-service = Service(executable_path=path)
+path = '/opt/headless/python/bin/chromedriver'
 options = Options()
+options.binary_location = '/opt/headless/python/bin/headless-chromium'
 options.add_argument('start-maximized')
 options.add_argument('enable-automation')
 options.add_argument('--headless')
@@ -40,78 +43,68 @@ options.add_argument('--disable-extensions')
 options.add_argument('--disable-dev-shm-usage')
 options.add_argument('--disable-browser-side-navigation')
 options.add_argument('--disable-gpu')
+options.add_argument("--single-process")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument('--ignore-ssl-errors')
 prefs = {'profile.default_content_setting_values.notifications': 2}
 options.add_experimental_option('prefs', prefs)
-driver = WebDriver(options=options, service=service)
+driver = WebDriver(executable_path=path, options=options)
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 auth.set_access_token(ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
-def main():
-    follow()
-    login()
-    tweet()
-    logout()
-    print('finished successfully.')
-    print('----------------------')
-    
-def follow():
-    query = SEARCH_WORD
-    results = api.search_tweets(q=query, count=3)
-    for result in results:
-        screen_name = result.user.screen_name
-        try:
-            api.create_friendship(screen_name=screen_name)
-        except Exception as e:
-            print(e)
+def lambda_handler(event, context):
+    try:
+        login()
+        tweet()
+        logout()
+    except Exception as e:
+        send_line_notify(e)
+    finally:
+        driver.quit()
+        
+        
 
 def login():
         driver.get(LOGIN_URL)
 
-        id = driver.find_element(By.ID, 'form_id')
+        id = driver.find_element_by_id('form_id')
         id.clear()
         id.send_keys(MAIL_ADDRESS)
 
-        password = driver.find_element(By.ID, 'form_password')
+        password = driver.find_element_by_id('form_password')
         password.clear()
         password.send_keys(PASSWORD)
 
-        login_button = driver.find_element(By.CLASS_NAME, 'loginBtn')
+        login_button = driver.find_element_by_class_name('loginBtn')
         login_button.click()
 
 def tweet():
     driver.get(DISCOUNT_URL)
-    if len(driver.find_elements(By.CLASS_NAME, 'btn-approval')) > 0:
-        approval_button = driver.find_element(By.CLASS_NAME, 'btn-approval')
+    if len(driver.find_elements_by_class_name('btn-approval')) > 0:
+        approval_button = driver.find_element_by_class_name('btn-approval')
         approval_button.click()
 
     random_number = random.randint(1, 100)
     xpath_content = f'//*[@id="search_result_img_box"]/li[{random_number}]/dl/dd[2]/div[2]/a'
-    content_url = driver.find_element(By.XPATH, xpath_content).get_attribute('href')
+    content_url = driver.find_element_by_xpath(xpath_content).get_attribute('href')
     driver.get(content_url)
 
-    affiliate_button = driver.find_element(By.CLASS_NAME, 'guide_list')
-    affiliate_button.click()
+    guide_url = driver.find_element_by_xpath(GUIDE_URL).get_attribute('href')
+    driver.get(guide_url)
 
-    if driver.current_url == HOME_URL:
-        driver.back()
-        affiliate_button = driver.find_element(By.CLASS_NAME, 'guide_list')
-        affiliate_button.click()
-
-    discount_ratio = driver.find_element(By.CLASS_NAME, 'icon_campaign').text
-    before_discount_price = driver.find_element(By.XPATH, XPATH_BEFORE_DISCOUNT_PRICE).text
-    after_discount_price = driver.find_element(By.XPATH, XPATH_AFTER_DISCOUNT_PRICE).text
-    search_tag = driver.find_element(By.CLASS_NAME, 'search_tag')
-    tags = search_tag.find_elements(By.TAG_NAME, 'a')
+    discount_ratio = driver.find_element_by_class_name('icon_campaign').text
+    before_discount_price = driver.find_element_by_xpath(XPATH_BEFORE_DISCOUNT_PRICE).text
+    after_discount_price = driver.find_element_by_xpath(XPATH_AFTER_DISCOUNT_PRICE).text
+    search_tag = driver.find_element_by_class_name('search_tag')
+    tags = search_tag.find_elements_by_tag_name('a')
     tag1 = tags[0].text
     tag2 = tags[1].text
     tag3 = tags[2].text
     tag4 = tags[3].text
     tag5 = tags[4].text
-    affiliate_link = driver.find_element(By.XPATH, XPATH_AFFILIATE_LINK).get_attribute('href')
+    affiliate_link = driver.find_element_by_xpath(XPATH_AFFILIATE_LINK).get_attribute('href')
     stamp = datetime.datetime.now()
 
     text = [
@@ -128,11 +121,17 @@ def tweet():
 
 def logout():
         driver_action = ActionChains(driver)
-        account_menu = driver.find_element(By.XPATH, XPATH_ACCOUNT)
+        account_menu = driver.find_element_by_xpath(XPATH_ACCOUNT)
         driver_action.move_to_element(account_menu).perform()
-        logout_button = driver.find_element(By.XPATH, XPATH_LOGOUT)
+        logout_button = driver.find_element_by_xpath(XPATH_LOGOUT)
         logout_button.click()
         driver.quit()
-
-if __name__ == '__main__':
-    main()
+        
+def send_line_notify(error):
+    headers = {
+        'Authorization': 'Bearer' + ' ' + LINE_NOTIFY_TOKEN
+    }
+    data = {
+        'message': error
+    }
+    requests.post(LINE_NOTIFY_API_URL, headers=headers, data=data)
