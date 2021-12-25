@@ -1,5 +1,6 @@
 import datetime
 import random
+import time
 
 import requests
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -63,8 +64,6 @@ def lambda_handler(event, context):
         send_line_notify(e)
     finally:
         driver.quit()
-        
-        
 
 def login():
         driver.get(LOGIN_URL)
@@ -90,7 +89,8 @@ def tweet():
     xpath_content = f'//*[@id="search_result_img_box"]/li[{random_number}]/dl/dd[2]/div[2]/a'
     content_url = driver.find_element_by_xpath(xpath_content).get_attribute('href')
     driver.get(content_url)
-
+    
+    driver.implicitly_wait(3)
     guide_url = driver.find_element_by_xpath(GUIDE_URL).get_attribute('href')
     driver.get(guide_url)
 
