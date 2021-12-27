@@ -27,8 +27,6 @@ CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
 ACCESS_TOKEN_KEY = settings.ACCESS_TOKEN_KEY
 ACCESS_TOKEN_SECRET = settings.ACCESS_TOKEN_SECRET
-LINE_NOTIFY_API_URL = settings.LINE_NOTIFY_API_URL
-LINE_NOTIFY_TOKEN = settings.LINE_NOTIFY_TOKEN
 
 path = '/opt/headless/python/bin/chromedriver'
 options = Options()
