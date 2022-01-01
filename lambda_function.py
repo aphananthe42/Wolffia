@@ -1,3 +1,5 @@
+from selenium.common.exceptions import NoSuchElementException
+
 import line
 import twitter
 
