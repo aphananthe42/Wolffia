@@ -90,7 +90,9 @@ def tweet():
     tag4 = tags[3].text
     tag5 = tags[4].text
     affiliate_link = driver.find_element_by_xpath(XPATH_AFFILIATE_LINK).get_attribute('href')
-    stamp = datetime.datetime.now()
+    t_delta = datetime.timedelta(hours=9)
+    JST = datetime.timezone(t_delta, 'JST')
+    stamp = datetime.datetime.now(JST)
 
     text = [
         TWEET_HEADER,
