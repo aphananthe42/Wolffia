@@ -1,5 +1,3 @@
-from selenium.common.exceptions import NoSuchElementException
-
 import line
 import twitter
 
@@ -9,8 +7,6 @@ def lambda_handler(event, context):
         try:
             twitter.login()
             twitter.tweet()
-            twitter.logout()
-        except (IndexError, NoSuchElementException):
             twitter.logout()
         except Exception as e:
             twitter.logout()
