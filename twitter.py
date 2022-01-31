@@ -19,7 +19,7 @@ GUIDE_URL = settings.GUIDE_URL
 XPATH_AFTER_DISCOUNT_PRICE = settings.XPATH_AFTER_DISCOUNT_PRICE
 XPATH_BEFORE_DISCOUNT_PRICE = settings.XPATH_BEFORE_DISCOUNT_PRICE
 XPATH_AFFILIATE_LINK = settings.XPATH_AFFILIATE_LINK
-TWEET_HEADER = settings.TWEET_HEADER
+XPATH_TITLE = settings.XPATH_TITLE
 XPATH_ACCOUNT = settings.XPATH_ACCOUNT
 XPATH_LOGOUT = settings.XPATH_LOGOUT
 SEARCH_WORD = settings.SEARCH_WORD
@@ -78,28 +78,21 @@ def tweet():
     
     guide_url = driver.find_element_by_xpath(GUIDE_URL).get_attribute('href')
     driver.get(guide_url)
-
+    
+    title = driver.find_element_by_xpath(XPATH_TITLE).get_attribute('title')
     discount_ratio = driver.find_element_by_class_name('icon_campaign').text
     before_discount_price = driver.find_element_by_xpath(XPATH_BEFORE_DISCOUNT_PRICE).text
     after_discount_price = driver.find_element_by_xpath(XPATH_AFTER_DISCOUNT_PRICE).text
-    search_tag = driver.find_element_by_class_name('search_tag')
-    tags = search_tag.find_elements_by_tag_name('a')
-    tag1 = tags[0].text
-    tag2 = tags[1].text
-    tag3 = tags[2].text
-    tag4 = tags[3].text
-    tag5 = tags[4].text
     affiliate_link = driver.find_element_by_xpath(XPATH_AFFILIATE_LINK).get_attribute('href')
+    
     t_delta = datetime.timedelta(hours=9)
     JST = datetime.timezone(t_delta, 'JST')
     stamp = datetime.datetime.now(JST)
 
     text = [
-        TWEET_HEADER,
-        '【' + discount_ratio + '】',
-        before_discount_price + ' ' + '➔➔➔' + ' ' + after_discount_price,
-        ' #' + tag1 + ' #' + tag2 + ' #' + tag3,
-        ' #' + tag4 + ' #' + tag5,
+        title,
+        '🌟🌟🌟' + discount_ratio + '🌟🌟🌟',
+        before_discount_price + ' ' + '➡️➡️➡️' + ' ' + after_discount_price,
         stamp.strftime('[%Y/%m/%d %H:%M:%S]'),
         affiliate_link
     ]
