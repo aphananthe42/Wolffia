@@ -16,6 +16,8 @@ HOME_URL = settings.HOME_URL
 LOGIN_URL = settings.LOGIN_URL
 DISCOUNT_URL = settings.DISCOUNT_URL
 GUIDE_URL = settings.GUIDE_URL
+STAR = settings.STAR
+ARROW = settings.ARROW
 XPATH_AFTER_DISCOUNT_PRICE = settings.XPATH_AFTER_DISCOUNT_PRICE
 XPATH_BEFORE_DISCOUNT_PRICE = settings.XPATH_BEFORE_DISCOUNT_PRICE
 XPATH_AFFILIATE_LINK = settings.XPATH_AFFILIATE_LINK
@@ -91,8 +93,8 @@ def tweet():
 
     text = [
         title,
-        '🌟🌟🌟' + discount_ratio + '🌟🌟🌟',
-        before_discount_price + ' ' + '➡️➡️➡️' + ' ' + after_discount_price,
+        STAR + discount_ratio + STAR,
+        before_discount_price + ' ' + ARROW + ' ' + after_discount_price,
         stamp.strftime('[%Y/%m/%d %H:%M:%S]'),
         affiliate_link
     ]
