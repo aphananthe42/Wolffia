@@ -1,4 +1,4 @@
-import line
+import sns
 import twitter
 
 
@@ -7,9 +7,9 @@ def lambda_handler(event, context):
     for i in range(3):
         try:
             twitter.tweet()
-        except Exception as e:
+        except Exception as error:
             if i == 2:
-                line.send_line_notify(e)
+                sns.send(error)
         else:
             twitter.logout()
             twitter.driver_quit()

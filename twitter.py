@@ -27,8 +27,8 @@ XPATH_LOGOUT = settings.XPATH_LOGOUT
 SEARCH_WORD = settings.SEARCH_WORD
 CONSUMER_KEY = settings.CONSUMER_KEY
 CONSUMER_SECRET = settings.CONSUMER_SECRET
-ACCESS_TOKEN_KEY = settings.ACCESS_TOKEN_KEY
-ACCESS_TOKEN_SECRET = settings.ACCESS_TOKEN_SECRET
+TWITTER_ACCESS_TOKEN_KEY = settings.TWITTER_ACCESS_TOKEN_KEY
+TWITTER_ACCESS_TOKEN_SECRET = settings.TWITTER_ACCESS_TOKEN_SECRET
 
 path = '/opt/headless/python/bin/chromedriver'
 options = Options()
@@ -50,7 +50,7 @@ options.add_experimental_option('prefs', prefs)
 driver = WebDriver(executable_path=path, options=options)
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
-auth.set_access_token(ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
+auth.set_access_token(TWITTER_ACCESS_TOKEN_KEY, TWITTER_ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
 def login():
